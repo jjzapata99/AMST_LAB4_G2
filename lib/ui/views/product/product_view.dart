@@ -1,20 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../../constants/colors.dart';
 import '../../../models/cart.dart';
 import '../../../models/product.dart';
 
-class ProductView extends StatelessWidget {
+class ProductView extends StatefulWidget {
   final Product product;
 
   ProductView(this.product);
 
   @override
+  State<ProductView> createState() => _ProductViewState();
+}
+
+class _ProductViewState extends State<ProductView> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.asset(widget.product.video)
+      ..initialize().then((_) {
+        setState(() {});
+      });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: product.color,
+      backgroundColor: widget.product.color,
       appBar: AppBar(
-        backgroundColor: product.color,
+        backgroundColor: widget.product.color,
         elevation: 0,
         actions: [
           IconButton(
@@ -22,12 +39,23 @@ class ProductView extends StatelessWidget {
               Icons.shopping_cart,
               color: AppColors.text_light,
             ),
-            onPressed: () => Navigator.of(context)
-                .pushNamed("/cart-view"), //Aún no está creado
+            onPressed: () => Navigator.of(context).pushNamed("/cart-view"),
           ),
         ],
       ),
       body: _body(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            _controller.value.isPlaying
+                ? _controller.pause()
+                : _controller.play();
+          });
+        },
+        child: Icon(
+          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+        ),
+      ),
     );
   }
 
@@ -41,7 +69,7 @@ class ProductView extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      product.title,
+                      widget.product.title,
                       style:
                           TextStyle(fontSize: 38, fontWeight: FontWeight.bold),
                     ),
@@ -51,8 +79,8 @@ class ProductView extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 80.0),
                         child: Hero(
-                            tag: "${product.id}",
-                            child: Image.asset(product.image)),
+                            tag: "${widget.product.id}",
+                            child: Image.asset(widget.product.image)),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(15),
@@ -61,12 +89,12 @@ class ProductView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                "Price",
+                                "Precio",
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.w500),
                               ),
                               Text(
-                                "\$" + product.price.toString(),
+                                "\$" + widget.product.price.toString(),
                                 style: TextStyle(
                                     fontSize: 36,
                                     fontWeight: FontWeight.normal),
@@ -79,38 +107,49 @@ class ProductView extends StatelessWidget {
         Expanded(
           flex: 2,
           child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(36),
-                topRight: Radius.circular(36),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(36),
+                  topRight: Radius.circular(36),
+                ),
               ),
-            ),
-            child: Column(children: [
-              Padding(
-                padding: EdgeInsets.all(50),
-                child: Text(
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisiut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat null apariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."),
-              ),
-              Material(
-                type: MaterialType.transparency,
-                child: Ink(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 3.0),
-                    shape: BoxShape.circle,
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(5),
+                child: Column(children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(25),
+                    child: Text(widget.product.description),
                   ),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(1000),
-                    onTap: () => {demoCarts.addItem(product)},
-                    child: Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Icon(Icons.shopping_cart),
+                  Material(
+                    type: MaterialType.transparency,
+                    child: Ink(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 3.0),
+                        shape: BoxShape.circle,
+                      ),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(1000),
+                        onTap: () => {demoCarts.addItem(widget.product)},
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Icon(Icons.shopping_cart),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              )
-            ]),
-          ),
+                  Padding(
+                    padding: EdgeInsets.all(25),
+
+                  ),
+                  _controller.value.isInitialized
+                      ? AspectRatio(
+                          aspectRatio: _controller.value.aspectRatio,
+                          child: VideoPlayer(_controller),
+                        )
+                      : Container(),
+                ]),
+              )),
         )
       ],
     );

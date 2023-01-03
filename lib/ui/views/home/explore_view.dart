@@ -5,6 +5,7 @@ import '../../../models/filter_chip.dart';
 import '../../../models/product.dart';
 
 import '../../../utils/info.dart';
+import 'package:video_player/video_player.dart';
 
 class Explore extends StatefulWidget {
   const Explore({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class Explore extends StatefulWidget {
 }
 
 class _Explore extends State<Explore> {
+
   @override
   void initState() {
     super.initState();
@@ -27,7 +29,7 @@ class _Explore extends State<Explore> {
         backgroundColor: AppColors.background,
         elevation: 0,
         title: Text(
-          "Explore",
+          "Explorar",
           style: TextStyle(color: AppColors.text_light),
         ),
       ),
@@ -51,6 +53,7 @@ class _Explore extends State<Explore> {
         ),
         itemBuilder: (context, index) => ItemCard(product: promos[index]),
       )),
+
     ]);
   }
 
@@ -102,7 +105,7 @@ class ItemCard extends StatelessWidget {
             ),
             Text("\$" + product.price.toString())
           ],
-        )
+        ),
       ],
     );
   }

@@ -34,7 +34,7 @@ class _ForYouView extends State<ForYouView> {
           ),
         ],
         title: Text(
-          "For You",
+          "Para ti",
           style: TextStyle(color: AppColors.text_light),
         ),
       ),
@@ -48,7 +48,7 @@ class _ForYouView extends State<ForYouView> {
         _carousel(),
         Padding(
           padding: EdgeInsets.all(10),
-          child: Text("Discounts",
+          child: Text("Descuentos",
               style: TextStyle(
                   color: AppColors.text_light,
                   fontSize: 34,
@@ -57,7 +57,7 @@ class _ForYouView extends State<ForYouView> {
         _promo(),
         Padding(
           padding: EdgeInsets.all(10),
-          child: Text("Shirts",
+          child: Text("Acción",
               style: TextStyle(
                   color: AppColors.text_light,
                   fontSize: 30,
@@ -66,7 +66,7 @@ class _ForYouView extends State<ForYouView> {
         _shirts(),
         Padding(
           padding: EdgeInsets.all(10),
-          child: Text("Pants",
+          child: Text("Terror",
               style: TextStyle(
                   color: AppColors.text_light,
                   fontSize: 30,
