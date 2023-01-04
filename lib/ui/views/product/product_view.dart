@@ -140,7 +140,6 @@ class _ProductViewState extends State<ProductView> {
                   ),
                   Padding(
                     padding: EdgeInsets.all(25),
-
                   ),
                   _controller.value.isInitialized
                       ? AspectRatio(
